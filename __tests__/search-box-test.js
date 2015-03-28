@@ -1,29 +1,37 @@
 jest.dontMock('../components/search-box.js');
 
 describe('SearchBoxWithDropdown', function() {
+  var React;
+  var TestUtils;
+  var renderedComponent;
+  var searchInput;
+
+  beforeEach(function() {
+    // External dependencies
+    React = require('react/addons');
+    TestUtils = React.addons.TestUtils;
+
+    // Render the component
+    var SearchBox = require('../components/search-box.js');
+    renderedComponent = TestUtils.renderIntoDocument(<SearchBox />);
+    searchInput = TestUtils.findRenderedDOMComponentWithTag(renderedComponent, 'input');
+  });
 
   it('is empty to start', function() {
-    var React = require('react/addons');
-    var SearchBox = require('../components/search-box.js');
+    // Verify that the search box is empty in it's initial state
+    expect(searchInput.getDOMNode().textContent).toEqual('');
+  });
 
-    var TestUtils = React.addons.TestUtils;
+  it('shows the suggestions dropdown on focus', function() {
+    TestUtils.Simulate.focus(searchInput);
+    var suggestions = TestUtils.findRenderedDOMComponentWithClass(renderedComponent, 'search__dropdown--suggestions');
+    expect(suggestions).toBeDefined();
+  });
 
-    // Render a checkbox with label in the document
-    var searchDom = TestUtils.renderIntoDocument(<SearchBox />);
-
-    var input = TestUtils.findRenderedDOMComponentWithTag(searchDom, 'input');
-    expect(input).toBeDefined();
-
-    // Verify that it's Off by default
-    expect(input.getDOMNode().textContent).toEqual('2');
-
-    // Simulate a click and verify that it is now On
-    TestUtils.Simulate.focus(input);
-    var suggestions = TestUtils.findRenderedDOMComponentWithClass(searchDom, 'search__dropdown');
-    expect(suggestions.getDOMNode().textContent).toEqual('suggestions');
-
-    TestUtils.Simulate.change(input);
-    var autocomplete = TestUtils.findRenderedDOMComponentWithClass(searchDom, 'search__dropdown');
-    expect(autocomplete.getDOMNode().textContent).toEqual('suggestions');
+  it('shows the autocomplete dropdown when there is text in the search input', function() {
+    TestUtils.Simulate.focus(searchInput);
+    TestUtils.Simulate.change(searchInput, {target: {value: 'Hello, world'}});
+    var autocomplete = TestUtils.findRenderedDOMComponentWithClass(renderedComponent, 'search__dropdown--autocomplete');
+    expect(autocomplete).toBeDefined();
   });
 });
