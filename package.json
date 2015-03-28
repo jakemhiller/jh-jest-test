@@ -1,0 +1,31 @@
+{
+  "name": "jest-test",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "compile": "browserify index.js -t babelify --outfile dist/bundle.js",
+    "watch": "watchify index.js -t babelify --outfile dist/bundle.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel": "latest",
+    "babel-jest": "latest",
+    "babelify": "^5.0.4",
+    "browserify": "latest",
+    "jest-cli": "latest",
+    "watchify": "latest"
+  },
+  "dependencies": {
+    "react": "latest",
+    "react-tools": "latest"
+  },
+  "jest": {
+    "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
+    "unmockedModulePathPatterns": [
+      "<rootDir>/node_modules/react"
+    ]
+  }
+}
